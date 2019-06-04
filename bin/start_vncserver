@@ -1,0 +1,2 @@
+tightvncserver -geometry 1100x600 :1
+

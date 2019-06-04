@@ -1,0 +1,15 @@
+This folder contains the software used to unpack the hld files.
+
+They were written in Matlab by LIP-Coimbra.
+There are two files, but actualy the main script calls the other.
+
+In the main script the paths to the input data, output files and 
+temp folder should be specified. 
+
+The TRB number should be given. For example, if the data were taken 
+using the TRB number 99:
+ 
+   trbNumber = '099';
+   TRBs = {[899],[1]};
+   
+

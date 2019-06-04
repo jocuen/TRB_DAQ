@@ -1,0 +1,34 @@
+--- startDAQ_Trasgo_threads.sh	2015-03-18 16:53:43.796818780 +0100
++++ startDAQ_Trasgo_threads_new1.sh	2015-03-18 17:11:51.066411903 +0100
+@@ -1,5 +1,6 @@
+ #!/bin/bash
+-# Marcos Seco 20/08/2014
++# Created  20/08/2014 Marcos Seco
++# Modified 18/03/2015 Marcos Seco
+ 
+ PATH=$PATH:/home/trasgo/bin
+ INPUTPATH="/home/trasgo/data/test01"
+@@ -46,15 +47,19 @@ startProgs() {
+   NETMEM_ARGS="-m $NUM_OF_ETRAX -q 32 -S 1 $(echo "$@" | sed -e 's/ / -i 50/g;/^[0-9]/{s/^/-i 50/}')"
+   EVTBUILD_ARGS="--debug trignr -m $NUM_OF_ETRAX -q 32 -S 1 --filesize 50M -d file -x tr -o $INPUTPATH"
+   SED_PROG="s/[[:blank:]]\+\(.*\)[[:blank:]]\+(.*/\1/;p"
++  EVTBUILD_SCREENCFG=/tmp/ev_screenrc
++  NETMEM_SCREENCFG=/tmp/nm_screenrc
+ 
+-  echo "screen -d -m -S eventBuilder $EXECPATH/daq_evtbuild $EVTBUILD_ARGS"
+-  screen -d -m -S eventBuilder $EXECPATH/daq_evtbuild $EVTBUILD_ARGS 
++  echo -e "logfile $LOGPATH/eventBuilder.log\nlogfile flush 1" > $EVTBUILD_SCREENCFG
++  echo "screen -c $EVTBUILD_SCREENCFG -L -d -m -S eventBuilder $EXECPATH/daq_evtbuild $EVTBUILD_ARGS"
++  screen -c $EVTBUILD_SCREENCFG -L -d -m -S eventBuilder $EXECPATH/daq_evtbuild $EVTBUILD_ARGS 
+   echo $?
+   echo "eventBuilder running on screen: "$(screen -ls | sed -n -e "/eventBuilder/{$SED_PROG}")
+   sleep 5
+ 
+-  echo "screen -d -m -S netmem  $EXECPATH/daq_netmem $NETMEM_ARGS"
+-  screen -d -m -S netmem $EXECPATH/daq_netmem $NETMEM_ARGS
++  echo -e "logfile $LOGPATH/netmem.log\nlogfile flush 1" > $NETMEM_SCREENCFG
++  echo "screen -c $NETMEM_SCREENCFG -L -d -m -S netmem  $EXECPATH/daq_netmem $NETMEM_ARGS"
++  screen -c $NETMEM_SCREENCFG -L -d -m -S netmem $EXECPATH/daq_netmem $NETMEM_ARGS
+   echo $?
+   echo "netmem running on screen: "$(screen -ls | sed -n -e "/netmem/{$SED_PROG}")
+   sleep 5

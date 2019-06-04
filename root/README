@@ -1,0 +1,35 @@
+This folder contains some examples of scripts analysis:
+  * ana.C
+  * drawHistos.C
+  * readPars.C
+   
+-The main scrip, ana.C, must be compiled againts the Root libraries:
+
+g++ ana.C -g -q -o <executable> ‘root-config --cflags --glibs‘
+
+The produced executable needs a data file as input:
+
+<executable>  Data
+
+As a result, it produces a .root file with a collection of histograms 
+and a text file with some parameters of interest.
+
+-The drawHistos.C script only displays the histograms of the Root file
+in a more comfortable way. The name of the input file is inside the 
+script:
+  // Open root file 
+  TFile *file = new TFile("<Name of the Root file");
+
+This script is not compiled, just type 
+
+	root -l drawHistos.C
+	
+or just load and call the function inside Root:
+   $ root -l
+   > .L drawHistos.C
+   > drawHistos()
+   
+- The readPars.C script just draws some of the parameters listed in the text file
+produced by the main executable. As drawHistos.C, just call it or load in root.
+
+    

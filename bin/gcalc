@@ -1,0 +1,74 @@
+#!/usr/bin/env perl
+# gcalc.pl - Google calculator example
+#
+# (c) Copyright, 2004-2005 By John Bokma, http://johnbokma.com/
+#
+# This script is for educational purposes only.
+#
+# Last updated: 2005-12-06 17:52:39 -0600
+
+use strict;
+use warnings;
+
+use URI::Escape;
+use LWP::UserAgent;
+
+
+unless ( @ARGV ) {
+
+    print "usage: gcalc expression\n",
+          "    example: gcalc 75 kg in stones\n";
+    exit( 1 ) ;
+}
+
+#my $url = 'http://www.google.com/search?num=1&q=' .
+my $url = 'http://www.google.de/search?q=' .
+    uri_escape( join ' ' => @ARGV );
+
+#print "url: $url\n";
+
+my $ua = LWP::UserAgent->new( agent => 'Firefox/1.5' );
+my $response = $ua->get( $url );
+
+$response->is_success or
+    die "$url: ", $response->status_line;
+
+my $content = $response->content;
+
+#print "result: $content\n";
+
+#<td nowrap dir=ltr><h2 class=r style="font-size:138%"><b>627 + 462 = 1<font size=-2> </font>089</b>
+#<td>&nbsp;<td nowrap ><h2 class=r style="font-size:138%"><b>10 * 20 = 200</b></h2><tr><td>&nbsp;<td>&nbsp;
+
+my ( $result ) = $content =~ m|<td style.*?<b>(.*?)</b>|;
+
+#print "$result";
+#$result = utf
+
+
+if ( $result ) {
+
+
+    $result =~ s/<sup>/^/g;
+    $result =~ s/<\/sup>//g;
+    $result =~ s/<h2 class=r style="font-size:138%">//g;
+    $result =~ s/<b>//g;
+    $result =~ s/<font size=-2>//g;
+    $result =~ s/<\/font>//g;
+    $result =~ s/<\/b>//g;
+    $result =~ s/(\d+) (\d+)/$1$2/g;
+    $result =~ s/(\d+) (\d+)/$1$2/g;
+#    $result =~ s/<.+?>//g;
+    $result =~ s/&#215;/*/g;
+    my $chr=chr(0xa0);
+#print "$chr\n";
+    $result =~ s/$chr//g;
+
+    print "$result\n";
+
+} else {
+
+    print "No result\n";
+}
+
+
